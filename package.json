@@ -1,0 +1,19 @@
+{
+  "name": "com.hisacat.localization",
+  "displayName": "Localization",
+  "version": "0.0.1-beta",
+  "description": "Make able to localize texts and sprites for Unity 3D",
+  "author": {
+    "name": "HisaCat",
+    "email": "ahisacat@gmail.com",
+    "url": "https://twitter.com/ahisacat"
+  },
+  "dependencies": {},
+  "unity": "2018.3",
+  "keywords": [
+    "Unity3D",
+    "Unity",
+    "Unity UI",
+    "Localization"
+  ]
+}
