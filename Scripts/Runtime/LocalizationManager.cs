@@ -82,14 +82,14 @@ public static class LocalizationManager
     {
         LoadLocalizationData(language);
 
-        localizationKey = localizationKey.Replace(" ", "");
-
         if (string.IsNullOrEmpty(localizationKey))
         {
             if (Application.isPlaying)
                 Debug.LogError("Localization Key cannot be empty");
             return localizationKey;
         }
+
+        localizationKey = localizationKey.Replace(" ", "");
 
         language = language.ToLower();
         if (localizedDataDic[language] == null)

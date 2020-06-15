@@ -1,9 +1,10 @@
 {
     "name": "Hisacat.Localization.Editor",
     "references": [
-        "Hisacat.Localization"
+        "Hisacat.Localization",
+        "Unity.TextMeshPro",
+        "Unity.TextMeshPro.Editor"
     ],
-    "optionalUnityReferences": [],
     "includePlatforms": [
         "Editor"
     ],
@@ -12,5 +13,6 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": []
+    "defineConstraints": [],
+    "versionDefines": []
 }

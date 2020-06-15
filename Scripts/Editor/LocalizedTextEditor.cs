@@ -9,8 +9,8 @@ namespace UnityEditor.UI
     [CanEditMultipleObjects]
     public class LocalizedTextEditor : GraphicEditor
     {
-        SerializedProperty m_LocalizationKey;
-        SerializedProperty m_FontData;
+        protected SerializedProperty m_LocalizationKey;
+        protected SerializedProperty m_FontData;
 
         protected override void OnEnable()
         {
