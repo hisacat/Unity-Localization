@@ -372,6 +372,9 @@ namespace UnityEditor
         }
         private void ImportFromCSV()
         {
+            EditorUtility.DisplayDialog("Import from .csv", "This feature is on development", "Ok");
+            return;
+
             var path = EditorUtility.OpenFilePanel("Import from .csv", "", "csv");
 
             if (string.IsNullOrEmpty(path))
