@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEditor.SceneManagement;
 using UnityEditorInternal;
 using UnityEngine;
@@ -77,6 +78,19 @@ namespace UnityEditor
                             LoadLocalizationData(selectedLanguage);
                     }
                 }
+
+                if (targetData == null)
+                {
+                    if (selectedLanguageIndex >= 0)
+                    {
+                        if (languages != null && languages.Length > selectedLanguageIndex)
+                        {
+                            var selectedLanguage = languages[selectedLanguageIndex].ToLower();
+                            LoadLocalizationData(selectedLanguage);
+                        }
+                    }
+                }
+
                 #endregion Draw current exist language dropdown
             }
             EditorGUILayout.EndHorizontal();
@@ -109,9 +123,11 @@ namespace UnityEditor
                         SpriteReorderableListChanged();
                 }
 
-                GUI.enabled = false;
-                GUILayout.Button("Export to .csv");
-                GUILayout.Button("Import from .csv");
+                GUI.enabled = targetData != null;
+                if (GUILayout.Button("Export to .csv"))
+                    ExportToCSV();
+                if (GUILayout.Button("Import from .csv"))
+                    ImportFromCSV();
                 GUI.enabled = true;
             }
             EditorGUILayout.EndScrollView();
@@ -338,6 +354,71 @@ namespace UnityEditor
             selectedLanguageIndex = datas.FindIndex((x) => { return x.name.ToLower() == language.ToLower(); });
 
             UpdateLocalizationData();
+        }
+
+        private void ExportToCSV()
+        {
+            var path = EditorUtility.SaveFilePanel("Export to .csv", "", "localization data.csv", "csv");
+
+            if (string.IsNullOrEmpty(path))
+                return;
+
+            string fileData = null;
+            var keys = targetData.strings.Keys;
+            foreach (var key in keys)
+                fileData += string.Format("\"{0}\",\"{1}\"\r\n", key, targetData.strings[key]);
+
+            System.IO.File.WriteAllText(path, fileData);
+        }
+        private void ImportFromCSV()
+        {
+            var path = EditorUtility.OpenFilePanel("Import from .csv", "", "csv");
+
+            if (string.IsNullOrEmpty(path))
+                return;
+
+            var fileData = System.IO.File.ReadAllText(path);
+            var csvData = ParseCSV(fileData);
+
+            targetData.strings.Clear();
+            foreach (var data in csvData)
+            {
+                var keys = data.Keys;
+                foreach (var key in keys)
+                    targetData.strings.Add(key, data[key].ToString());
+            }
+            EditorUtility.SetDirty(targetData);
+            LocalizationSettingsEditorWindow.UpdateLocalizedObjects();
+        }
+
+        private static string SPLIT_RE = @",(?=(?:[^""]*""[^""]*"")*(?![^""]*""))";
+        private static string LINE_SPLIT_RE = @"\r\n|\n\r|\n|\r";
+        private static char[] TRIM_CHARS = { '\"' };
+
+        private static List<Dictionary<string, string>> ParseCSV(string text)
+        {
+            var list = new List<Dictionary<string, string>>();
+            var lines = Regex.Split(text, LINE_SPLIT_RE);
+
+            if (lines.Length <= 1) return list;
+
+            var header = Regex.Split(lines[0], SPLIT_RE);
+            for (var i = 1; i < lines.Length; i++)
+            {
+
+                var values = Regex.Split(lines[i], SPLIT_RE);
+                if (values.Length == 0 || values[0] == "") continue;
+
+                var entry = new Dictionary<string, string>();
+                for (var j = 0; j < header.Length && j < values.Length; j++)
+                {
+                    string value = values[j];
+                    value = value.TrimStart(TRIM_CHARS).TrimEnd(TRIM_CHARS).Replace("\\", "");
+                    entry[header[j]] = value;
+                }
+                list.Add(entry);
+            }
+            return list;
         }
     }
 }
