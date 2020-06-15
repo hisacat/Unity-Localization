@@ -162,7 +162,7 @@ namespace UnityEditor
             if (GUILayout.Button("Create", GUILayout.Height(50)))
             {
                 var data = CreateInstance<LocalizationData>();
-                if (isCopyFromExistingData)
+                if (isCopyFromExistingData && selectedLanguageIndex >= 0)
                 {
                     var baseAsset = Resources.Load<LocalizationData>("Localization/" + languages[selectedLanguageIndex]);
                     if (baseAsset != null)
@@ -191,6 +191,11 @@ namespace UnityEditor
                         }
                     }
                 }
+
+                if (!AssetDatabase.IsValidFolder("Assets/Resources"))
+                    AssetDatabase.CreateFolder("Assets", "Resources");
+                if (!AssetDatabase.IsValidFolder("Assets/Resources/Localization"))
+                    AssetDatabase.CreateFolder("Assets/Resources", "Localization");
 
                 AssetDatabase.CreateAsset(data, "Assets/Resources/Localization/" + languageCode + ".asset");
 

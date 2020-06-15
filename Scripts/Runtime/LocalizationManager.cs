@@ -20,15 +20,26 @@ public static class LocalizationManager
         if (language == null)
             language = "";
 
-        if (settings == null)
+        if (string.IsNullOrEmpty(language))
         {
-            settings = Resources.Load<LocalizationSettings>("Localization/Dependency/settings");
+            if(settings == null)
+                settings = Resources.Load<LocalizationSettings>("Localization/Dependency/settings");
+            if (settings == null)
+            {
+                Debug.LogError("Cannot find localization settings");
+                return;
+            }
             CurrentLanguage = settings.currentLanguage;
         }
 
         language = language.ToLower();
         if (localizedDataDic == null)
             localizedDataDic = new Dictionary<string, LocalizationData>();
+        if (localizedDataDic.Keys.Contains(language))
+        {
+            if (localizedDataDic[language] == null)
+                localizedDataDic.Remove(language);
+        }
         if (localizedDataDic.Keys.Contains(language))
         {
             //Already loaded
@@ -50,11 +61,16 @@ public static class LocalizationManager
 
     public static string GetLocalizedText(string localizationKey)
     {
-        if (CurrentLanguage == null)
+        if (string.IsNullOrEmpty(CurrentLanguage))
         {
             if (settings == null)
             {
                 settings = Resources.Load<LocalizationSettings>("Localization/Dependency/settings");
+                if (settings == null)
+                {
+                    Debug.LogError("Cannot find localization settings");
+                    return localizationKey;
+                }
                 CurrentLanguage = settings.currentLanguage;
             }
         }
@@ -72,12 +88,12 @@ public static class LocalizationManager
         {
             if (Application.isPlaying)
                 Debug.LogError("Localization Key cannot be empty");
-            return null;
+            return localizationKey;
         }
 
         language = language.ToLower();
         if (localizedDataDic[language] == null)
-            return null;
+            return localizationKey;
 
         if (localizedDataDic[language].strings.Keys.Contains(localizationKey))
         {

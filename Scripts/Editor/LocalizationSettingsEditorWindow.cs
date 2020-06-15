@@ -14,7 +14,20 @@ namespace UnityEditor
             LocalizationSettingsEditorWindow window = (LocalizationSettingsEditorWindow)GetWindow(typeof(LocalizationSettingsEditorWindow));
 
             window.minSize = new Vector2(450, 355);
-            window.settings = Resources.Load<LocalizationSettings>("Localization/Dependency/settings");
+            var settings = Resources.Load<LocalizationSettings>("Localization/Dependency/settings");
+            if (settings == null)
+            {
+                if (!AssetDatabase.IsValidFolder("Assets/Resources"))
+                    AssetDatabase.CreateFolder("Assets", "Resources");
+                if (!AssetDatabase.IsValidFolder("Assets/Resources/Localization"))
+                    AssetDatabase.CreateFolder("Assets/Resources", "Localization");
+                if (!AssetDatabase.IsValidFolder("Assets/Resources/Localization/Dependency"))
+                    AssetDatabase.CreateFolder("Assets/Resources/Localization", "Dependency");
+                settings = CreateInstance<LocalizationSettings>();
+                AssetDatabase.CreateAsset(settings, "Assets/Resources/Localization/Dependency/settings.asset");
+                AssetDatabase.Refresh();
+            }
+            window.settings = settings;
             window.FindIndex();
 
             Texture icon = EditorGUIUtility.IconContent(EditorGUIUtility.isProSkin ? "d_AlphabeticalSorting" : "AlphabeticalSorting").image;
