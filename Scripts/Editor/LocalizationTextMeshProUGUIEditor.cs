@@ -72,51 +72,7 @@ namespace TMPro.EditorUtilities
             foreach (var text in texts)
             {
                 var curText = text.GetComponent<TextMeshProUGUI>();
-                if (Application.isPlaying)
-                    Destroy(curText);
-                else
-                    Undo.DestroyObjectImmediate(curText);
-
-                RectTransform rt = text.transform as RectTransform;
-                var anchorMin = rt.anchorMin; var anchorMax = rt.anchorMax;
-                var offsetMin = rt.offsetMin; var offsetMax = rt.offsetMax;
-                var curLocalizedText = Undo.AddComponent<LocalizationTextMeshProUGUI>(text);
-                rt.anchorMin = anchorMin; rt.anchorMax = anchorMax;
-                rt.offsetMin = offsetMin; rt.offsetMax = offsetMax;
-
-                curLocalizedText.localizationKey = curText.text;
-
-                curLocalizedText.font = curText.font;
-                curLocalizedText.fontStyle = curText.fontStyle;
-                curLocalizedText.fontSize = curText.fontSize;
-                curLocalizedText.enableAutoSizing = curText.enableAutoSizing;
-                curLocalizedText.color = curText.color;
-                curLocalizedText.colorGradient = curText.colorGradient;
-                curLocalizedText.colorGradientPreset = curText.colorGradientPreset;
-                curLocalizedText.overrideColorTags = curText.overrideColorTags;
-                curLocalizedText.characterSpacing = curText.characterSpacing;
-                curLocalizedText.wordSpacing = curText.wordSpacing;
-                curLocalizedText.lineSpacing = curText.lineSpacing;
-                curLocalizedText.paragraphSpacing = curText.paragraphSpacing;
-                curLocalizedText.alignment = curText.alignment;
-                curLocalizedText.overflowMode = curText.overflowMode;
-                curLocalizedText.pageToDisplay = curText.pageToDisplay;
-                curLocalizedText.isLinkedTextComponent = curText.isLinkedTextComponent;
-                curLocalizedText.linkedTextComponent = curText.linkedTextComponent;
-                curLocalizedText.mappingUvLineOffset = curText.mappingUvLineOffset;
-                curLocalizedText.enableWordWrapping = curText.enableWordWrapping;
-                curLocalizedText.wordWrappingRatios = curText.wordWrappingRatios;
-                curLocalizedText.horizontalMapping = curText.horizontalMapping;
-                curLocalizedText.verticalMapping = curText.verticalMapping;
-                curLocalizedText.margin = curText.margin;
-                curLocalizedText.geometrySortingOrder = curText.geometrySortingOrder;
-                curLocalizedText.richText = curText.richText;
-                curLocalizedText.raycastTarget = curText.raycastTarget;
-                curLocalizedText.parseCtrlCharacters = curText.parseCtrlCharacters;
-                curLocalizedText.useMaxVisibleDescender = curText.useMaxVisibleDescender;
-                curLocalizedText.spriteAsset = curText.spriteAsset;
-                curLocalizedText.enableKerning = curText.enableKerning;
-                curLocalizedText.extraPadding = curText.extraPadding;
+                ReplaceComponent.Replace<LocalizationTextMeshProUGUI>(curText);
 
                 EditorUtility.SetDirty(text);
                 EditorSceneManager.MarkAllScenesDirty();
@@ -158,52 +114,8 @@ namespace TMPro.EditorUtilities
 
             foreach (var localizedText in localizedTexts)
             {
-                var curLocalizedText = localizedText.GetComponent<LocalizationTextMeshProUGUI>();
-                if (Application.isPlaying)
-                    Destroy(curLocalizedText);
-                else
-                    Undo.DestroyObjectImmediate(curLocalizedText);
-
-                RectTransform rt = localizedText.transform as RectTransform;
-                var anchorMin = rt.anchorMin; var anchorMax = rt.anchorMax;
-                var offsetMin = rt.offsetMin; var offsetMax = rt.offsetMax;
-                var curText = Undo.AddComponent<TextMeshProUGUI>(localizedText);
-                rt.anchorMin = anchorMin; rt.anchorMax = anchorMax;
-                rt.offsetMin = offsetMin; rt.offsetMax = offsetMax;
-
-                curText.text = curLocalizedText.localizationKey;
-
-                curText.font = curLocalizedText.font;
-                curText.fontStyle = curLocalizedText.fontStyle;
-                curText.fontSize = curLocalizedText.fontSize;
-                curText.enableAutoSizing = curLocalizedText.enableAutoSizing;
-                curText.color = curLocalizedText.color;
-                curText.colorGradient = curLocalizedText.colorGradient;
-                curText.colorGradientPreset = curLocalizedText.colorGradientPreset;
-                curText.overrideColorTags = curLocalizedText.overrideColorTags;
-                curText.characterSpacing = curLocalizedText.characterSpacing;
-                curText.wordSpacing = curLocalizedText.wordSpacing;
-                curText.lineSpacing = curLocalizedText.lineSpacing;
-                curText.paragraphSpacing = curLocalizedText.paragraphSpacing;
-                curText.alignment = curLocalizedText.alignment;
-                curText.overflowMode = curLocalizedText.overflowMode;
-                curText.pageToDisplay = curLocalizedText.pageToDisplay;
-                curText.isLinkedTextComponent = curLocalizedText.isLinkedTextComponent;
-                curText.linkedTextComponent = curLocalizedText.linkedTextComponent;
-                curText.mappingUvLineOffset = curLocalizedText.mappingUvLineOffset;
-                curText.enableWordWrapping = curLocalizedText.enableWordWrapping;
-                curText.wordWrappingRatios = curLocalizedText.wordWrappingRatios;
-                curText.horizontalMapping = curLocalizedText.horizontalMapping;
-                curText.verticalMapping = curLocalizedText.verticalMapping;
-                curText.margin = curLocalizedText.margin;
-                curText.geometrySortingOrder = curLocalizedText.geometrySortingOrder;
-                curText.richText = curLocalizedText.richText;
-                curText.raycastTarget = curLocalizedText.raycastTarget;
-                curText.parseCtrlCharacters = curLocalizedText.parseCtrlCharacters;
-                curText.useMaxVisibleDescender = curLocalizedText.useMaxVisibleDescender;
-                curText.spriteAsset = curLocalizedText.spriteAsset;
-                curText.enableKerning = curLocalizedText.enableKerning;
-                curText.extraPadding = curLocalizedText.extraPadding;
+                var curText = localizedText.GetComponent<LocalizationTextMeshProUGUI>();
+                ReplaceComponent.Replace<TextMeshProUGUI>(curText);
 
                 EditorUtility.SetDirty(localizedText);
                 EditorSceneManager.MarkAllScenesDirty();

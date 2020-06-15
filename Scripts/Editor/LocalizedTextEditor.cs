@@ -71,28 +71,7 @@ namespace UnityEditor.UI
             foreach (var text in texts)
             {
                 var curText = text.GetComponent<Text>();
-                if (Application.isPlaying)
-                    Destroy(curText);
-                else
-                    Undo.DestroyObjectImmediate(curText);
-
-                var curLocalizedText = Undo.AddComponent<LocalizedText>(text);
-
-                curLocalizedText.localizationKey = curText.text;
-
-                curLocalizedText.font = curText.font;
-                curLocalizedText.fontStyle = curText.fontStyle;
-                curLocalizedText.fontSize = curText.fontSize;
-                curLocalizedText.lineSpacing = curText.lineSpacing;
-                curLocalizedText.supportRichText = curText.supportRichText;
-                curLocalizedText.alignment = curText.alignment;
-                curLocalizedText.alignByGeometry = curText.alignByGeometry;
-                curLocalizedText.horizontalOverflow = curText.horizontalOverflow;
-                curLocalizedText.verticalOverflow = curText.verticalOverflow;
-                curLocalizedText.resizeTextForBestFit = curText.resizeTextForBestFit;
-                curLocalizedText.color = curText.color;
-                curLocalizedText.material = curText.material;
-                curLocalizedText.raycastTarget = curText.raycastTarget;
+                ReplaceComponent.Replace<LocalizedText>(curText);
 
                 EditorUtility.SetDirty(text);
                 EditorSceneManager.MarkAllScenesDirty();
@@ -135,28 +114,7 @@ namespace UnityEditor.UI
             foreach (var localizedText in localizedTexts)
             {
                 var curLocalizedText = localizedText.GetComponent<LocalizedText>();
-                if (Application.isPlaying)
-                    Destroy(curLocalizedText);
-                else
-                    Undo.DestroyObjectImmediate(curLocalizedText);
-
-                var curText = Undo.AddComponent<Text>(localizedText);
-
-                curText.text = curLocalizedText.text;
-
-                curText.font = curLocalizedText.font;
-                curText.fontStyle = curLocalizedText.fontStyle;
-                curText.fontSize = curLocalizedText.fontSize;
-                curText.lineSpacing = curLocalizedText.lineSpacing;
-                curText.supportRichText = curLocalizedText.supportRichText;
-                curText.alignment = curLocalizedText.alignment;
-                curText.alignByGeometry = curLocalizedText.alignByGeometry;
-                curText.horizontalOverflow = curLocalizedText.horizontalOverflow;
-                curText.verticalOverflow = curLocalizedText.verticalOverflow;
-                curText.resizeTextForBestFit = curLocalizedText.resizeTextForBestFit;
-                curText.color = curLocalizedText.color;
-                curText.material = curLocalizedText.material;
-                curText.raycastTarget = curLocalizedText.raycastTarget;
+                ReplaceComponent.Replace<Text>(curLocalizedText);
 
                 EditorUtility.SetDirty(localizedText);
                 EditorSceneManager.MarkAllScenesDirty();
