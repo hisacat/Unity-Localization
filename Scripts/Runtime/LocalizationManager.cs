@@ -88,9 +88,7 @@ public static class LocalizationManager
                 Debug.LogError("Localization Key cannot be empty");
             return localizationKey;
         }
-
-        localizationKey = localizationKey.Replace(" ", "");
-
+        localizationKey = localizationKey.ToLower();
         language = language.ToLower();
         if (localizedDataDic[language] == null)
             return localizationKey;

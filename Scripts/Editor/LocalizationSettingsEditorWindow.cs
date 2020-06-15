@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace UnityEditor
 {
@@ -127,6 +128,12 @@ namespace UnityEditor
         {
             var localizedTexts = Resources.FindObjectsOfTypeAll<LocalizedText>();
             foreach (var localizedText in localizedTexts)
+            {
+                localizedText.UpdateLocalization();
+                EditorUtility.SetDirty(localizedText);
+            }
+            var localizedTextMeshPros = Resources.FindObjectsOfTypeAll<LocalizationTextMeshProUGUI>();
+            foreach (var localizedText in localizedTextMeshPros)
             {
                 localizedText.UpdateLocalization();
                 EditorUtility.SetDirty(localizedText);

@@ -41,7 +41,6 @@ namespace TMPro
 #if UNITY_EDITOR
         private void Update()
         {
-            m_LocalizationKey = m_LocalizationKey.Replace(" ", "");
             if (prevLocalizationKey != m_LocalizationKey)
             {
                 prevLocalizationKey = m_LocalizationKey;

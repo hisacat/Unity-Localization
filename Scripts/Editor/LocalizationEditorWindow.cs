@@ -212,7 +212,7 @@ namespace UnityEditor
                     EditorGUI.LabelField(stringLabelFieldRect, "  String");
 
                     Rect stringFieldRect = rect; stringFieldRect.width -= keyLabelFieldRect.width + keyFieldRect.width + stringLabelFieldRect.width; stringFieldRect.x += keyLabelFieldRect.width + keyFieldRect.width + stringLabelFieldRect.width;
-                    element.text = EditorGUI.TextField(stringFieldRect, element.text);
+                    element.text = EditorGUI.TextArea(stringFieldRect, element.text);
                 };
 
                 stringReorderableList.onChangedCallback = (list) =>
@@ -270,7 +270,7 @@ namespace UnityEditor
             int count = stringKeyPair.Count;
             for (int i = 0; i < count; i++)
             {
-                stringKeyPair[i].localizationKey = stringKeyPair[i].localizationKey.Replace(" ", "").ToLower();
+                stringKeyPair[i].localizationKey = stringKeyPair[i].localizationKey.ToLower();
 
                 if (!keys.Contains(stringKeyPair[i].localizationKey))
                     keys.Add(stringKeyPair[i].localizationKey);
@@ -305,7 +305,7 @@ namespace UnityEditor
             int count = spriteKeyPair.Count;
             for (int i = 0; i < count; i++)
             {
-                spriteKeyPair[i].localizationKey = spriteKeyPair[i].localizationKey.Replace(" ", "").ToLower();
+                spriteKeyPair[i].localizationKey = spriteKeyPair[i].localizationKey.ToLower();
 
                 if (!keys.Contains(spriteKeyPair[i].localizationKey))
                     keys.Add(spriteKeyPair[i].localizationKey);
