@@ -77,7 +77,12 @@ namespace TMPro.EditorUtilities
                 else
                     Undo.DestroyObjectImmediate(curText);
 
+                RectTransform rt = text.transform as RectTransform;
+                var anchorMin = rt.anchorMin; var anchorMax = rt.anchorMax;
+                var offsetMin = rt.offsetMin; var offsetMax = rt.offsetMax;
                 var curLocalizedText = Undo.AddComponent<LocalizationTextMeshProUGUI>(text);
+                rt.anchorMin = anchorMin; rt.anchorMax = anchorMax;
+                rt.offsetMin = offsetMin; rt.offsetMax = offsetMax;
 
                 curLocalizedText.localizationKey = curText.text;
 
@@ -159,7 +164,12 @@ namespace TMPro.EditorUtilities
                 else
                     Undo.DestroyObjectImmediate(curLocalizedText);
 
+                RectTransform rt = localizedText.transform as RectTransform;
+                var anchorMin = rt.anchorMin; var anchorMax = rt.anchorMax;
+                var offsetMin = rt.offsetMin; var offsetMax = rt.offsetMax;
                 var curText = Undo.AddComponent<TextMeshProUGUI>(localizedText);
+                rt.anchorMin = anchorMin; rt.anchorMax = anchorMax;
+                rt.offsetMin = offsetMin; rt.offsetMax = offsetMax;
 
                 curText.text = curLocalizedText.localizationKey;
 
