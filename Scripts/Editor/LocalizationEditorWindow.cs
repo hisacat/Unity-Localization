@@ -363,7 +363,7 @@ namespace UnityEditor
             if (string.IsNullOrEmpty(path))
                 return;
 
-            string fileData = null;
+            string fileData = "key,string\r\n";
             var keys = targetData.strings.Keys;
             foreach (var key in keys)
                 fileData += string.Format("\"{0}\",\"{1}\"\r\n", key, targetData.strings[key]);
@@ -372,8 +372,8 @@ namespace UnityEditor
         }
         private void ImportFromCSV()
         {
-            EditorUtility.DisplayDialog("Import from .csv", "This feature is on development", "Ok");
-            return;
+            //EditorUtility.DisplayDialog("Import from .csv", "This feature is on development", "Ok");
+            //return;
 
             var path = EditorUtility.OpenFilePanel("Import from .csv", "", "csv");
 
@@ -386,22 +386,23 @@ namespace UnityEditor
             targetData.strings.Clear();
             foreach (var data in csvData)
             {
-                var keys = data.Keys;
-                foreach (var key in keys)
-                    targetData.strings.Add(key, data[key].ToString());
+                targetData.strings.Add(data["key"], data["string"]);
             }
+
+            //EditorGUIUtility.hotControl = -1;
             EditorUtility.SetDirty(targetData);
+
+            UpdateLocalizationData();
             LocalizationSettingsEditorWindow.UpdateLocalizedObjects();
         }
 
         private static string SPLIT_RE = @",(?=(?:[^""]*""[^""]*"")*(?![^""]*""))";
         private static string LINE_SPLIT_RE = @"\r\n|\n\r|\n|\r";
         private static char[] TRIM_CHARS = { '\"' };
-
-        private static List<Dictionary<string, string>> ParseCSV(string text)
+        public static List<Dictionary<string, string>> ParseCSV(string data)
         {
             var list = new List<Dictionary<string, string>>();
-            var lines = Regex.Split(text, LINE_SPLIT_RE);
+            var lines = Regex.Split(data, LINE_SPLIT_RE);
 
             if (lines.Length <= 1) return list;
 
