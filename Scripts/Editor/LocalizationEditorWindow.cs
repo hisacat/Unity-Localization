@@ -366,7 +366,7 @@ namespace UnityEditor
             string fileData = "key,string\r\n";
             var keys = targetData.strings.Keys;
             foreach (var key in keys)
-                fileData += string.Format("\"{0}\",\"{1}\"\r\n", key, targetData.strings[key]);
+                fileData += string.Format("\"{0}\",\"{1}\"\r\n", key, targetData.strings[key].Replace("\"\"", "\""));
 
             System.IO.File.WriteAllText(path, fileData);
         }
