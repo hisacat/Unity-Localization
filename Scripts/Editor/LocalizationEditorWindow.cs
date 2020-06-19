@@ -366,7 +366,11 @@ namespace UnityEditor
             string fileData = "key,string\r\n";
             var keys = targetData.strings.Keys;
             foreach (var key in keys)
-                fileData += string.Format("\"{0}\",\"{1}\"\r\n", key, targetData.strings[key].Replace("\"\"", "\""));
+            {
+                //var value = Regex.Replace(targetData.strings[key].Replace("\"", "\"\""), LINE_SPLIT_RE, "\\r\\n");
+                var value = Regex.Replace(targetData.strings[key], LINE_SPLIT_RE, "\\r\\n");
+                fileData += string.Format("\"{0}\",\"{1}\"\r\n", key, value);
+            }
 
             System.IO.File.WriteAllText(path, fileData);
         }
@@ -386,7 +390,7 @@ namespace UnityEditor
             targetData.strings.Clear();
             foreach (var data in csvData)
             {
-                targetData.strings.Add(data["key"], data["string"]);
+                targetData.strings.Add(data["key"], data["string"].Replace("\\r\\n", "\r\n"));
             }
 
             //EditorGUIUtility.hotControl = -1;
@@ -409,7 +413,6 @@ namespace UnityEditor
             var header = Regex.Split(lines[0], SPLIT_RE);
             for (var i = 1; i < lines.Length; i++)
             {
-
                 var values = Regex.Split(lines[i], SPLIT_RE);
                 if (values.Length == 0 || values[0] == "") continue;
 
@@ -417,7 +420,7 @@ namespace UnityEditor
                 for (var j = 0; j < header.Length && j < values.Length; j++)
                 {
                     string value = values[j];
-                    value = value.TrimStart(TRIM_CHARS).TrimEnd(TRIM_CHARS).Replace("\\", "");
+                    value = value.TrimStart(TRIM_CHARS).TrimEnd(TRIM_CHARS);
                     entry[header[j]] = value;
                 }
                 list.Add(entry);
