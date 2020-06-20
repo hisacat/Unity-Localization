@@ -123,16 +123,16 @@ namespace UnityEditor
                         SpriteReorderableListChanged();
                 }
 
-                GUI.enabled = targetData != null;
+                //GUI.enabled = targetData != null;
                 if (GUILayout.Button("Export to .csv"))
                     ExportToCSV();
-                if (GUILayout.Button("CSV to JSON"))
+                if (GUILayout.Button("CSV to JSON (Open link)"))
                     Application.OpenURL(@"https://csvjson.com/csv2json");
                 if (GUILayout.Button("Import from .json"))
                     ImportFromJSON();
-                if (GUILayout.Button("Import from .csv"))
-                    ImportFromCSV();
-                GUI.enabled = true;
+                //if (GUILayout.Button("Import from .csv"))
+                //    ImportFromCSV();
+                //GUI.enabled = true;
             }
             EditorGUILayout.EndScrollView();
         }
@@ -402,13 +402,16 @@ namespace UnityEditor
                 langueges.Add(data.name);
 
             string fileData = string.Format("key,{0}\r\n", string.Join(",", langueges));
-            var keys = targetData.strings.Keys;
-            foreach (var key in keys)
+            var keys = datas != null && datas.Count > 0 ? datas[0].strings.Keys : null;
+            if (keys != null)
             {
-                var values = new List<string>();
-                foreach (var data in datas)
-                    values.Add(string.Format("\"{0}\"", data.strings[key].Replace("\"", "\"\"")));
-                fileData += string.Format("\"{0}\",{1}\r\n", key, string.Join(",", values));
+                foreach (var key in keys)
+                {
+                    var values = new List<string>();
+                    foreach (var data in datas)
+                        values.Add(string.Format("\"{0}\"", data.strings[key].Replace("\"", "\"\"")));
+                    fileData += string.Format("\"{0}\",{1}\r\n", key, string.Join(",", values));
+                }
             }
 
             System.IO.File.WriteAllText(path, fileData, System.Text.Encoding.UTF8);
