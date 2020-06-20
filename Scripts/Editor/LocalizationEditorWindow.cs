@@ -367,8 +367,7 @@ namespace UnityEditor
             var keys = targetData.strings.Keys;
             foreach (var key in keys)
             {
-                var value = Regex.Replace(targetData.strings[key].Replace("\"", "\"\""), LINE_SPLIT_RE, "\\r\\n");
-                //value = Regex.Replace(targetData.strings[key], LINE_SPLIT_RE, "\\r\\n");
+                var value = targetData.strings[key].Replace("\"", "\"\"");//, LINE_SPLIT_RE, "\\r\\n");
                 fileData += string.Format("\"{0}\",\"{1}\"\r\n", key, value);
             }
 
