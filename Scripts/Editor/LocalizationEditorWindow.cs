@@ -126,6 +126,10 @@ namespace UnityEditor
                 GUI.enabled = targetData != null;
                 if (GUILayout.Button("Export to .csv"))
                     ExportToCSV();
+                if (GUILayout.Button("CSV to JSON"))
+                    Application.OpenURL(@"https://csvjson.com/csv2json");
+                if (GUILayout.Button("Import from .json"))
+                    ImportFromJSON();
                 if (GUILayout.Button("Import from .csv"))
                     ImportFromCSV();
                 GUI.enabled = true;
@@ -363,7 +367,7 @@ namespace UnityEditor
             if (string.IsNullOrEmpty(path))
                 return;
 
-            string fileData = "key,string\r\n";
+            string fileData = "key,value\r\n";
             var keys = targetData.strings.Keys;
             foreach (var key in keys)
             {
@@ -373,10 +377,50 @@ namespace UnityEditor
 
             System.IO.File.WriteAllText(path, fileData, System.Text.Encoding.UTF8);
         }
+
+        [System.Serializable]
+        internal class CsvJsonDataList
+        {
+            public CsvJsonData[] datas;
+        }
+
+        [System.Serializable]
+        internal class CsvJsonData
+        {
+            public string key;
+            public string value;
+        }
+
+        private void ImportFromJSON()
+        {
+            var path = EditorUtility.OpenFilePanel("Import from .json", "", "json");
+
+            if (string.IsNullOrEmpty(path))
+                return;
+
+            var fileData = System.IO.File.ReadAllText(path, System.Text.Encoding.UTF8);
+            var jsonData = JsonUtility.FromJson<CsvJsonDataList>("{\"datas\":" + fileData + "}");
+
+            targetData.strings.Clear();
+            if (jsonData != null && jsonData.datas != null)
+            {
+                foreach (var data in jsonData.datas)
+                {
+                    targetData.strings.Add(data.key, data.value);
+                }
+            }
+
+            //EditorGUIUtility.hotControl = -1;
+            EditorUtility.SetDirty(targetData);
+
+            UpdateLocalizationData();
+            LocalizationSettingsEditorWindow.UpdateLocalizedObjects();
+        }
+
         private void ImportFromCSV()
         {
-            //EditorUtility.DisplayDialog("Import from .csv", "This feature is on development", "Ok");
-            //return;
+            EditorUtility.DisplayDialog("Import from .csv", "This feature is on development", "Ok");
+            return;
 
             var path = EditorUtility.OpenFilePanel("Import from .csv", "", "csv");
 
