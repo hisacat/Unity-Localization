@@ -397,28 +397,21 @@ namespace UnityEditor
             if (string.IsNullOrEmpty(path))
                 return;
 
-            string fileData = "key,value\r\n";
+            var langueges = new List<string>();
+            foreach (var data in datas)
+                langueges.Add(data.name);
+
+            string fileData = string.Format("key,{0}\r\n", string.Join(",", langueges));
             var keys = targetData.strings.Keys;
             foreach (var key in keys)
             {
-                var value = targetData.strings[key].Replace("\"", "\"\"");//, LINE_SPLIT_RE, "\\r\\n");
-                fileData += string.Format("\"{0}\",\"{1}\"\r\n", key, value);
+                var values = new List<string>();
+                foreach (var data in datas)
+                    values.Add(string.Format("\"{0}\"", data.strings[key].Replace("\"", "\"\"")));
+                fileData += string.Format("\"{0}\",{1}\r\n", key, string.Join(",", values));
             }
 
             System.IO.File.WriteAllText(path, fileData, System.Text.Encoding.UTF8);
-        }
-
-        [System.Serializable]
-        internal class CsvJsonDataList
-        {
-            public CsvJsonData[] datas;
-        }
-
-        [System.Serializable]
-        internal class CsvJsonData
-        {
-            public string key;
-            public string value;
         }
 
         private void ImportFromJSON()
@@ -429,19 +422,47 @@ namespace UnityEditor
                 return;
 
             var fileData = System.IO.File.ReadAllText(path, System.Text.Encoding.UTF8);
-            var jsonData = JsonUtility.FromJson<CsvJsonDataList>("{\"datas\":" + fileData + "}");
+            var jsonData = SimpleJSON.JSON.Parse(fileData).AsArray;
 
-            targetData.strings.Clear();
-            if (jsonData != null && jsonData.datas != null)
+            targetData = null;
+
+            foreach (var data in datas)
+                AssetDatabase.DeleteAsset(string.Format("Assets/Resources/Localization/{0}.asset", data.name));
+
+            if (!AssetDatabase.IsValidFolder("Assets/Resources"))
+                AssetDatabase.CreateFolder("Assets", "Resources");
+            if (!AssetDatabase.IsValidFolder("Assets/Resources/Localization"))
+                AssetDatabase.CreateFolder("Assets/Resources", "Localization");
+            int count = jsonData.Count;
+            var keys = new List<string>();
+            var langueges = new List<string>();
+            foreach (var key in jsonData[0].Keys)
             {
-                foreach (var data in jsonData.datas)
-                {
-                    targetData.strings.Add(data.key, data.value);
-                }
+                if (key != "key")
+                    langueges.Add(key);
+            }
+            for (int i = 0; i < count; i++)
+            {
+                var data = jsonData[i];
+                keys.Add(data["key"]);
             }
 
-            //EditorGUIUtility.hotControl = -1;
-            EditorUtility.SetDirty(targetData);
+            var newDatas = new Dictionary<string, LocalizationData>();
+            foreach (var languege in langueges)
+            {
+                var newData = CreateInstance<LocalizationData>();
+                AssetDatabase.CreateAsset(newData, "Assets/Resources/Localization/" + languege + ".asset");
+                newDatas.Add(languege, newData);
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                var data = jsonData[i];
+                foreach (var languege in langueges)
+                    newDatas[languege].strings.Add(data["key"], data[languege]);
+            }
+
+            AssetDatabase.Refresh();
 
             UpdateLocalizationData();
             LocalizationSettingsEditorWindow.UpdateLocalizedObjects();
