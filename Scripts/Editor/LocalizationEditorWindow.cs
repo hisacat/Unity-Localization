@@ -311,6 +311,21 @@ namespace UnityEditor
                 targetData.strings.Add(curPair.localizationKey, curPair.text);
             }
 
+            foreach (var data in datas)
+            {
+                if (data == targetData)
+                    continue;
+
+                var oldDic = new LocalizationData.LocalizedStringDictionary();
+                oldDic.CopyFrom(data.strings);
+
+                data.strings.Clear();
+                foreach (var key in keys)
+                    data.strings.Add(key, oldDic.ContainsKey(key) ? oldDic[key] : null);
+
+                EditorUtility.SetDirty(data);
+            }
+
             EditorUtility.SetDirty(targetData);
             LocalizationSettingsEditorWindow.UpdateLocalizedObjects();
         }
@@ -344,6 +359,21 @@ namespace UnityEditor
 
                 var curPair = spriteKeyPair[i];
                 targetData.sprites.Add(curPair.localizationKey, curPair.sprite);
+            }
+
+            foreach (var data in datas)
+            {
+                if (data == targetData)
+                    continue;
+
+                var oldDic = new LocalizationData.LocalizedSpriteDictionary();
+                oldDic.CopyFrom(data.sprites);
+
+                data.sprites.Clear();
+                foreach (var key in keys)
+                    data.sprites.Add(key, oldDic.ContainsKey(key) ? oldDic[key] : null);
+
+                EditorUtility.SetDirty(data);
             }
 
             EditorUtility.SetDirty(targetData);
