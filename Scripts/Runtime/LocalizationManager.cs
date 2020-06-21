@@ -10,9 +10,29 @@ public static class LocalizationManager
 
     private static Dictionary<string, LocalizationData> localizedDataDic = null;
 
-    public static void SetLanguage(string language)
+    public static void SetLanguage(string language, bool forceUpdateLocalizedTexts = true)
     {
         CurrentLanguage = language;
+
+        if (forceUpdateLocalizedTexts)
+            ForceUpdateLocalizedTexts();
+    }
+
+    public static void ForceUpdateLocalizedTexts()
+    {
+        var localizedTexts = GameObject.FindObjectsOfType<UnityEngine.UI.LocalizedText>();
+        if (localizedTexts != null)
+        {
+            foreach (var text in localizedTexts)
+                text.UpdateLocalization();
+        }
+
+        var localizedTMPTexts = GameObject.FindObjectsOfType<TMPro.LocalizationTextMeshProUGUI>();
+        if (localizedTMPTexts != null)
+        {
+            foreach (var text in localizedTMPTexts)
+                text.UpdateLocalization();
+        }
     }
 
     private static void LoadLocalizationData(string language)
