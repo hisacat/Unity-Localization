@@ -462,7 +462,7 @@ namespace UnityEditor
             {
                 var data = jsonData[i];
                 foreach (var languege in langueges)
-                    newDatas[languege].strings.Add(data["key"], data[languege]);
+                    newDatas[languege].strings.Add(data["key"], data[languege].ToString().ToLower());
             }
 
             AssetDatabase.Refresh();

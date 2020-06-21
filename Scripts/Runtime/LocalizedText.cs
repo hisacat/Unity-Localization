@@ -51,7 +51,9 @@ namespace UnityEngine.UI
 
         public void UpdateLocalization()
         {
-            this.text = LocalizationManager.GetLocalizedText(m_LocalizationKey);
+            var localizedText = LocalizationManager.GetLocalizedText(m_LocalizationKey);
+            if (localizedText == null) localizedText = m_LocalizationKey;
+            this.text = localizedText;
         }
     }
 }

@@ -22,7 +22,7 @@ public static class LocalizationManager
 
         if (string.IsNullOrEmpty(language))
         {
-            if(settings == null)
+            if (settings == null)
                 settings = Resources.Load<LocalizationSettings>("Localization/Dependency/settings");
             if (settings == null)
             {
@@ -59,7 +59,7 @@ public static class LocalizationManager
         }
     }
 
-    public static string GetLocalizedText(string localizationKey)
+    public static string GetLocalizedText(string localizationKey, Object obj = null)
     {
         if (string.IsNullOrEmpty(CurrentLanguage))
         {
@@ -68,8 +68,8 @@ public static class LocalizationManager
                 settings = Resources.Load<LocalizationSettings>("Localization/Dependency/settings");
                 if (settings == null)
                 {
-                    Debug.LogError("Cannot find localization settings");
-                    return localizationKey;
+                    Debug.LogError("Cannot find localization settings", obj);
+                    return null;
                 }
                 CurrentLanguage = settings.currentLanguage;
             }
@@ -78,16 +78,17 @@ public static class LocalizationManager
         return GetLocalizedText(localizationKey, CurrentLanguage);
     }
 
-    public static string GetLocalizedText(string localizationKey, string language)
+    public static string GetLocalizedText(string localizationKey, string language, Object obj = null)
     {
         LoadLocalizationData(language);
 
         if (string.IsNullOrEmpty(localizationKey))
         {
             if (Application.isPlaying)
-                Debug.LogError("Localization Key cannot be empty");
-            return localizationKey;
+                Debug.LogError("Localization Key cannot be empty", obj);
+            return null;
         }
+
         localizationKey = localizationKey.ToLower();
         language = language.ToLower();
         if (localizedDataDic[language] == null)
