@@ -468,6 +468,10 @@ namespace UnityEditor
             AssetDatabase.Refresh();
 
             UpdateLocalizationData();
+
+            StringReorderableListChanged();
+            SpriteReorderableListChanged();
+
             LocalizationSettingsEditorWindow.UpdateLocalizedObjects();
         }
 
