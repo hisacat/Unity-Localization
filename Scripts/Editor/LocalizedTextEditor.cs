@@ -25,7 +25,9 @@ namespace UnityEditor.UI
 
             EditorGUILayout.PropertyField(m_LocalizationKey);
             EditorGUILayout.PropertyField(m_FontData);
+
             AppearanceControlsGUI();
+            RaycastControlsGUI();
             serializedObject.ApplyModifiedProperties();
         }
 
