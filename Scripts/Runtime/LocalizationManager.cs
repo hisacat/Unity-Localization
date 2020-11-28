@@ -40,15 +40,15 @@ public static class LocalizationManager
         if (language == null)
             language = "";
 
+        if (settings == null) settings = Resources.Load<LocalizationSettings>("Localization/Dependency/settings");
+        if (settings == null)
+        {
+            Debug.LogError("Cannot find localization settings");
+            return;
+        }
+
         if (string.IsNullOrEmpty(language))
         {
-            if (settings == null)
-                settings = Resources.Load<LocalizationSettings>("Localization/Dependency/settings");
-            if (settings == null)
-            {
-                Debug.LogError("Cannot find localization settings");
-                return;
-            }
             CurrentLanguage = settings.currentLanguage;
         }
 
@@ -72,7 +72,7 @@ public static class LocalizationManager
                 Debug.LogWarning(string.Format("Cannot find \"{0}\" localized datas! use \"Language Instead Missing ({1})\"setting", language, settings.languageInsteadMissing));
                 curLocalizedData = Resources.Load<LocalizationData>("Localization/" + settings.languageInsteadMissing);
                 if (curLocalizedData == null)
-                    Debug.LogWarning(string.Format("Cannot find \"{0}\" localized datas!", settings.languageInsteadMissing));
+                    Debug.LogError(string.Format("Cannot find Instead language \"{0}\" localized datas!", settings.languageInsteadMissing));
             }
 
             localizedDataDic.Add(language, curLocalizedData);
