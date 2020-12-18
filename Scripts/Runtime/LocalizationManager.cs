@@ -55,6 +55,13 @@ public static class LocalizationManager
         language = language.ToLower();
         if (localizedDataDic == null)
             localizedDataDic = new Dictionary<string, LocalizationData>();
+
+        if(settings.UsingRuntimeData)
+        {
+            //
+            return;
+        }
+
         if (localizedDataDic.Keys.Contains(language))
         {
             if (localizedDataDic[language] == null)

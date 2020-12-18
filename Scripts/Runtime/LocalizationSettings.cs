@@ -11,4 +11,8 @@ public class LocalizationSettings : ScriptableObject
     [SerializeField]
     protected string m_LanguageInsteadMissing = "";
     public string languageInsteadMissing { get { return m_LanguageInsteadMissing; } set { m_LanguageInsteadMissing = value; } }
+
+    [SerializeField]
+    protected bool m_UsingRuntimeData = false;
+    public bool UsingRuntimeData { get { return m_UsingRuntimeData; } set { m_UsingRuntimeData = value; } }
 }
