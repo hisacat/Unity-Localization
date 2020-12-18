@@ -101,7 +101,7 @@ namespace UnityEditor
             }
 
             EditorGUI.BeginChangeCheck();
-            settings.UsingRuntimeData = EditorGUILayout.Toggle(settings.UsingRuntimeData);
+            settings.UsingRuntimeData = EditorGUILayout.Toggle("Using runtime data",settings.UsingRuntimeData);
             if (EditorGUI.EndChangeCheck())
             {
                 EditorUtility.SetDirty(settings);
