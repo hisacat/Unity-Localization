@@ -10,6 +10,9 @@ public static class LocalizationManager
 
     private static Dictionary<string, LocalizationData> localizedDataDic = null;
 
+    private static string RuntimeLocalizationJson = string.Empty;
+
+
     public static void SetLanguage(string language, bool forceUpdateLocalizedTexts = true)
     {
         CurrentLanguage = language;
@@ -42,6 +45,8 @@ public static class LocalizationManager
             Debug.LogError("LoadRuntimeLocalizationData only works when UsingRuntimeData is on! please check setting");
             return;
         }
+
+        RuntimeLocalizationJson = json;
     }
 
     private static void LoadLocalizationData(string language)
@@ -67,7 +72,7 @@ public static class LocalizationManager
 
         if (settings.UsingRuntimeData)
         {
-            //
+            //RuntimeLocalizationJson ...
             return;
         }
 
