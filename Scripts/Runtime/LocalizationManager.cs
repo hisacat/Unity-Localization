@@ -12,21 +12,6 @@ public static class LocalizationManager
 
     private static Dictionary<string, LocalizationData> runtimeLocalizedDataDic = null;
 
-    private static Dictionary<string, LocalizationData> CurrentLocalizedDataDic
-    {
-        get
-        {
-            if (settings == null) settings = Resources.Load<LocalizationSettings>("Localization/Dependency/settings");
-            if (settings == null)
-            {
-                Debug.LogError("Cannot find localization settings");
-                return runtimeLocalizedDataDic;
-            }
-
-            return settings.UsingRuntimeData ? runtimeLocalizedDataDic : runtimeLocalizedDataDic;
-        }
-    }
-
     public static void SetLanguage(string language, bool forceUpdateLocalizedTexts = true)
     {
         CurrentLanguage = language;
@@ -94,12 +79,22 @@ public static class LocalizationManager
 
         if (localizedDataDic == null)
             localizedDataDic = new Dictionary<string, LocalizationData>();
-        if (runtimeLocalizedDataDic == null)
-            runtimeLocalizedDataDic = new Dictionary<string, LocalizationData>();
 
         if (settings.UsingRuntimeData)
         {
-            return;
+            if (runtimeLocalizedDataDic == null)
+                runtimeLocalizedDataDic = new Dictionary<string, LocalizationData>();
+
+            using (var enumerator = runtimeLocalizedDataDic.Keys.GetEnumerator())
+            {
+                while(enumerator.MoveNext())
+                {
+                    var key = enumerator.Current;
+
+                    if (!localizedDataDic.ContainsKey(key))
+                        localizedDataDic.Add(key, runtimeLocalizedDataDic[key]);
+                }
+            }
         }
 
         if (localizedDataDic.Keys.Contains(language))
@@ -158,12 +153,12 @@ public static class LocalizationManager
 
         localizationKey = localizationKey.ToLower();
         language = language.ToLower();
-        if (CurrentLocalizedDataDic[language] == null)
+        if (localizedDataDic[language] == null)
             return localizationKey;
 
-        if (CurrentLocalizedDataDic[language].strings.Keys.Contains(localizationKey))
+        if (localizedDataDic[language].strings.Keys.Contains(localizationKey))
         {
-            var data = CurrentLocalizedDataDic[language].strings[localizationKey];
+            var data = localizedDataDic[language].strings[localizationKey];
             if (data == null)
                 Debug.LogWarning(string.Format("Localized string \"{0}\" on \"{1}\" is not setted", localizationKey, language));
             return data;
@@ -190,12 +185,12 @@ public static class LocalizationManager
 
         language = language.ToLower();
         LoadLocalizationData(language);
-        if (CurrentLocalizedDataDic[language] == null)
+        if (localizedDataDic[language] == null)
             return null;
 
-        if (CurrentLocalizedDataDic[language].sprites.Keys.Contains(localizationKey))
+        if (localizedDataDic[language].sprites.Keys.Contains(localizationKey))
         {
-            var data = CurrentLocalizedDataDic[language].sprites[localizationKey];
+            var data = localizedDataDic[language].sprites[localizationKey];
             if (data == null)
                 Debug.LogWarning(string.Format("Localized sprite \"{0}\" on \"{1}\" is not setted", localizationKey, language));
 
