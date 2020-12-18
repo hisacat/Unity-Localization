@@ -95,6 +95,8 @@ public static class LocalizationManager
                         localizedDataDic.Add(key, runtimeLocalizedDataDic[key]);
                 }
             }
+
+            return;
         }
 
         if (localizedDataDic.Keys.Contains(language))
