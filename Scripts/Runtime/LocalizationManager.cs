@@ -35,6 +35,15 @@ public static class LocalizationManager
         }
     }
 
+    public static void LoadRuntimeLocalizationData(string json)
+    {
+        if (!settings.UsingRuntimeData)
+        {
+            Debug.LogError("LoadRuntimeLocalizationData only works when UsingRuntimeData is on! please check setting");
+            return;
+        }
+    }
+
     private static void LoadLocalizationData(string language)
     {
         if (language == null)
@@ -56,7 +65,7 @@ public static class LocalizationManager
         if (localizedDataDic == null)
             localizedDataDic = new Dictionary<string, LocalizationData>();
 
-        if(settings.UsingRuntimeData)
+        if (settings.UsingRuntimeData)
         {
             //
             return;
