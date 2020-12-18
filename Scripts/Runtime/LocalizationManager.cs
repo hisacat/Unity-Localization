@@ -16,7 +16,14 @@ public static class LocalizationManager
     {
         get
         {
-            return runtimeLocalizedDataDic;
+            if (settings == null) settings = Resources.Load<LocalizationSettings>("Localization/Dependency/settings");
+            if (settings == null)
+            {
+                Debug.LogError("Cannot find localization settings");
+                return runtimeLocalizedDataDic;
+            }
+
+            return settings.UsingRuntimeData ? runtimeLocalizedDataDic : runtimeLocalizedDataDic;
         }
     }
 
