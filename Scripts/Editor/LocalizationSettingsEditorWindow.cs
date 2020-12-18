@@ -99,6 +99,14 @@ namespace UnityEditor
                 EditorUtility.SetDirty(settings);
                 UpdateLocalizedObjects();
             }
+
+            EditorGUI.BeginChangeCheck();
+            settings.UsingRuntimeData = EditorGUILayout.Toggle(settings.UsingRuntimeData);
+            if (EditorGUI.EndChangeCheck())
+            {
+                EditorUtility.SetDirty(settings);
+                UpdateLocalizedObjects();
+            }
         }
 
         private void PreloadAllLocalizationData()
